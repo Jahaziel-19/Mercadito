@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Crear producto / Servicio{% endblock %}
+{% block head %}{% endblock %}
+{% block content %}
+<div class="container-sm">
+<h1>Crear Producto</h1>
+<form action="/crear_producto" method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="nombre_producto">Nombre del Producto</label>
+        <input type="text" class="form-control" id="nombre_producto" name="nombre_producto" required>
+    </div>
+    <div class="form-group">
+        <label for="descripcion">Descripción</label>
+        <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="precio">Precio</label>
+        <input type="number" class="form-control" id="precio" name="precio" required>
+    </div>
+    <div class="form-group">
+        <label for="carrera">Carrera</label>
+        <select class="form-control" id="carrera" name="carrera" required>
+            {% for carrera in carreras %}
+            <option value="{{ carrera.nombre }}">{{ carrera.nombre }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="imagen_producto">Imagen del Producto</label>
+        <input type="file" class="form-control-file" id="imagen_producto" name="imagen_producto">
+    </div>
+    <button type="submit" class="btn btn-primary">Crear Producto</button>
+</form>
+</div>
+{% endblock %}

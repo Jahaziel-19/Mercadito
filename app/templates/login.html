@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Iniciar sesión{% endblock %}
+{% block head %}
+{% endblock %}
+{% block content %}
+<div class="container mt-5 justify-content-center">
+    <h1 class="text-center mb-5">Login</h1>
+    <form method="post" class="col-5">
+        <div class="col">
+            <label for="correo">Correo</label>
+            <input type="email" class="form-control" id="correo" name="correo" required>
+        </div>
+        <div class="col">
+            <label for="contraseña">Contraseña</label>
+            <input type="password" class="form-control" id="contraseña" name="contraseña" required>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Ingresar</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

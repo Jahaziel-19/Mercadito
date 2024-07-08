@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Generar pedido{% endblock %}
+{% block head %}
+{% endblock %}
+{% block content %}
+
+<div class="container mt-5">
+    <h1 class="text-center mb-5">Pedido de {{ producto.nombre_producto }}</h1>
+    <form method="post">
+        <div class="form-group">
+            <label for="cantidad">Cantidad</label>
+            <input type="number" class="form-control" id="cantidad" name="cantidad" required>
+        </div>
+        <div class="form-group">
+            <label for="notas">Notas</label>
+            <textarea class="form-control" id="notas" name="notas" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Realizar Pedido</button>
+    </form>
+</div>
+{% endblock %}
