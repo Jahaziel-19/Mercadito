@@ -1,16 +1,20 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
-from config import Config
-from models import db
-from flask_login import LoginManager, current_user, login_required, login_user, logout_user
-from flask_migrate import Migrate
-from models import User, Carrera, Producto, Pedido, Admin
+# Módulos de python
+import os
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 
-import os
+# Módulos de flask
+from flask import Flask, render_template, request, redirect, url_for, flash 
+from flask_login import LoginManager, current_user, login_required, login_user, logout_user # Registro e inicio de sesión de usuarios
+from flask_migrate import Migrate # Realizar migraciones en la base de datos
 
-app = Flask(__name__)
-app.config.from_object(Config)
+# Módulos personalizados
+from config import Config # Importar configuraciones
+from models import db, Alumno, Carrera, Producto, Pedido, Admin # Importación de modelos
+
+
+app = Flask(__name__) # Declaración de la app
+app.config.from_object(Config) # Declaración de las configuraciones
 
 app.app_context().push()
 db.init_app(app)
@@ -22,11 +26,11 @@ login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
-    user = User.query.get(user_id)
+    alumno = Alumno.query.get(user_id)
     admin = Admin.query.get(user_id)
 
-    if user:
-        return user
+    if alumno:
+        return alumno
     elif admin:
         return admin
     else:
@@ -37,15 +41,14 @@ def load_user(user_id):
     '''
 
 
-
-# ---------------------  RUTAS -----------------------
+# *******************************  RUTAS  *******************************
 @app.route('/', methods=['POST', 'GET'])
-def home():
-    return render_template('home.html')
+def index():
+    return render_template('index.html')
 
-# --------------- User -----------------
-@app.route('/register', methods=['GET', 'POST'])
-def register():
+# --------------- ALUMNO -----------------
+@app.route('/registro', methods=['GET', 'POST'])
+def registro():
     if request.method == 'POST':
         id = request.form['id']
         nombre = request.form['nombre']
@@ -63,7 +66,7 @@ def register():
         else:
             foto_path = 'static/default_profile_pic.png'
 
-        nuevo_usuario = User(
+        nuevo_usuario = Alumno(
             id=id,
             nombre=nombre,
             apellido_paterno=apellido_paterno,
@@ -88,7 +91,7 @@ def login():
     if request.method == 'POST':
         correo = request.form['correo']
         contraseña = request.form['contraseña']
-        usuario = User.query.filter_by(email=correo).first()
+        usuario = Alumno.query.filter_by(email=correo).first()
         if usuario and check_password_hash(usuario.password_hash, contraseña):
             login_user(usuario)
             return redirect(url_for('productos_servicios'))
@@ -96,10 +99,13 @@ def login():
             flash('Usuario o contraseña incorrectos')    
     return render_template('login.html')
 
-@app.route('/profile', methods=['POST', 'GET'])
-def profile():
-    return render_template('profile.html')
+@app.route('/perfil_alumno', methods=['POST', 'GET'])
+def perfil_alumno():
+    return render_template('perfil_alumno.html')
 
+
+
+# --------------- ADMIN -----------------
 @app.route('/crear_producto', methods=['POST', 'GET'])
 def crear_producto():
     if request.method == 'POST':

@@ -7,7 +7,7 @@ from sqlalchemy import Enum as SqlEnum, ForeignKey, Integer, String, Column
 
 db = SQLAlchemy()
 
-class User(db.Model, UserMixin):
+class Alumno(db.Model, UserMixin):
     id = db.Column(db.String, primary_key=True, unique=True) # Matricula
     nombre = db.Column(db.String(150), nullable=False)
     apellido_paterno = db.Column(db.String(150), nullable=False)
@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
     foto_perfil = Column(String(255), default='static/default_profile_pic.png')
     password_hash = db.Column(db.String(255), nullable=False)  # Campo para almacenar la contraseña encriptada
     email = Column(String(255), unique=True, nullable=False)
-    rol = Column(String(255), nullable=False, default='USER')
+    rol = Column(String(255), nullable=False, default='ALUMNO')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -63,10 +63,11 @@ class Producto(db.Model):
 class Pedido(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
     id_producto = db.Column(db.Integer, nullable=False)
-    id_user = db.Column(db.String, nullable=False)
+    id_alumno = db.Column(db.String, nullable=False)
     cantidad = db.Column(db.Integer, nullable=False)
     sub_total = db.Column(db.Integer, nullable=False)
     notas = db.Column(db.String)
+    estatus = db.Column(db.String)
 
 class Carrera(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
