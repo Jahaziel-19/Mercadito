@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Editar Carrito{% endblock %}
+{% block head %}{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h1>Editar Carrito</h1>
+    <form method="POST" action="{{ url_for('editar_carrito', id=item.id) }}">
+        <div class="form-group">
+            <label for="nombre_producto">Nombre del Producto</label>
+            <input type="text" class="form-control" id="nombre_producto" value="{{ producto.nombre_producto }}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="cantidad">Cantidad</label>
+            <input type="number" class="form-control" id="cantidad" name="cantidad" min="1" value="{{ item.cantidad }}" required>
+        </div>
+        <div class="form-group">
+            <label for="notas">Notas</label>
+            <textarea class="form-control" id="notas" name="notas">{{ item.notas }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+        <a href="{{ url_for('perfil_alumno') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

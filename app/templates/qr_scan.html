@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% block title %}Escáner{% endblock %}
+{% block head %}{% endblock %}
+{% block content %}
+<div class="container-sm">
+    <h3 class="mt-4">Escanea el código QR del pedido</h3>
+    <button class="col-3 mt-3 btn btn-primary" id="toggle-button">Activar Escaneo</button>
+    <video id="qr-video" width="320" height="240" autoplay></video>
+    <div id="product-info"></div>
+</div>
+
+<!-- Serializa el objeto `user` en un formato JSON para usarlo en el frontend -->
+<script>
+    const currentUser = JSON.parse('{{ user | tojson | safe }}');
+    console.log('Información del usuario actual:', currentUser);
+</script>
+
+<script>
+    const codeReader = new ZXing.BrowserMultiFormatReader();
+    let scanning = false;
+    let videoStream;
+
+    document.getElementById('toggle-button').addEventListener('click', () => {
+        if (scanning) {
+            stopScanning();
+        } else {
+            startScanning();
+        }
+    });
+
+    function startScanning() {
+        scanning = true;
+        document.getElementById('toggle-button').innerText = 'Desactivar Escaneo';
+        document.getElementById('qr-video').style.display = 'block';
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                videoStream = stream;
+                const video = document.getElementById('qr-video');
+                video.srcObject = stream;
+                video.setAttribute("playsinline", true);
+                video.play();
+
+                codeReader.decodeFromVideoDevice(undefined, 'qr-video', (result, error) => {
+                    if (result) {
+                        const qrValue = parseInt(result.text);
+                        console.log('Código QR detectado:', qrValue);
+                        mostrarInformacionPedido(qrValue);
+                    }
+                    if (error && !(error instanceof ZXing.NotFoundException)) {
+                        console.error(error);
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error al acceder a la cámara:', error);
+            });
+    }
+
+    function stopScanning() {
+        scanning = false;
+        document.getElementById('toggle-button').innerText = 'Activar Escaneo';
+        document.getElementById('qr-video').style.display = 'none';
+
+        if (videoStream) {
+            videoStream.getTracks().forEach(track => {
+                track.stop();
+            });
+            videoStream = null;
+        }
+        const video = document.getElementById('qr-video');
+        video.srcObject = null;
+    }
+
+    function mostrarInformacionPedido(pedidoId) {
+        const productInfo = document.getElementById('product-info');
+
+        // Verifica que el elemento exista
+        if (!productInfo) {
+            console.error('El elemento con ID product-info no se encontró.');
+            return;
+        }
+
+        productInfo.innerHTML = `
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Cargando información del pedido...</h5>
+                    <p class="card-text"></p>  <!-- Agregar este elemento para evitar que sea null -->
+                </div>
+            </div>
+        `;
+
+        fetch(`/obtener_pedido/${pedidoId}`)
+            .then(response => response.json())
+            .then(data => {
+                const cardTitle = productInfo.querySelector('.card-title');
+                const cardText = productInfo.querySelector('.card-text');
+
+                if (!cardTitle || !cardText) {
+                    console.error('No se encontraron los elementos .card-title o .card-text.');
+                    return;
+                }
+
+                if (data.error) {
+                    cardTitle.textContent = 'Error';
+                    cardText.textContent = data.error;
+                } else {
+                    const productosDeCarrera = data.filter(producto => producto.carrera === currentUser.carrera);
+
+                    cardTitle.textContent = `Pedido #${pedidoId}`;
+                    cardText.innerHTML = `
+                        <ul>
+                            ${productosDeCarrera.map(producto => `<li> <strong>Producto/servicio: </strong>${producto.nombre_producto}: ${producto.estatus}</li>`).join('')}
+                            ${productosDeCarrera.map(producto => `
+                                <li><strong>Cantidad:</strong> ${producto.cantidad}</li>
+                                <li><strong>Total:</strong>$${producto.subtotal}</li>
+                            `).join('')}
+                        </ul>
+                        <button id="cerrar-pedido" class="btn btn-success mt-3">Cerrar Pedido</button>
+                    `;
+
+                    document.getElementById('cerrar-pedido').addEventListener('click', () => {
+                        cerrarPedido(pedidoId);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error al obtener el pedido:', error);
+                const cardTitle = productInfo.querySelector('.card-title');
+                const cardText = productInfo.querySelector('.card-text');
+
+                if (cardTitle) {
+                    cardTitle.textContent = 'Error';
+                }
+
+                if (cardText) {
+                    cardText.textContent = 'Error al obtener el producto. Intenta de nuevo.';
+                }
+            });
+    }
+
+
+    function cerrarPedido(pedidoId) {
+        fetch('/cerrar_pedido', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ pedido_id: pedidoId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                mostrarModalError(data.error);
+            } else {
+                alert(`Éxito: ${data.message}`);
+                mostrarInformacionPedido(pedidoId);  // Refrescar la información del pedido
+            }
+        })
+        .catch(error => {
+            console.error('Error al cerrar el pedido:', error);
+        });
+    }
+
+    function mostrarModalError(mensaje) {
+        const modal = `
+            <div class="modal fade" id="modalError" tabindex="-1" aria-labelledby="modalErrorLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalErrorLabel">Error</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            ${mensaje}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modal);
+        const modalElement = new bootstrap.Modal(document.getElementById('modalError'));
+        modalElement.show();
+    }
+</script>
+
+{% endblock %}

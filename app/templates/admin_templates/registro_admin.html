@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Registro para administrador{% endblock %}
+{% block head %}{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center">Registro de administrador</h2>
+            <form method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="id">Matricula</label>
+                    <input type="text" class="form-control" id="id" name="id" placeholder="Ingrese su matricula" required>
+                </div>
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese su nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="carrera">Carrera</label>
+                    <select class="form-control" id="carrera" name="carrera" required>
+                        {% for carrera in carreras %}
+                            <option value="{{ carrera.nombre }}">{{ carrera.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="foto_perfil">Foto de Perfil</label>
+                    <input type="file" class="form-control-file" id="foto_perfil" name="foto_perfil">
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Ingrese su contraseña" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Ingrese su email" required>
+                </div>
+                <a href="{{ url_for('login_admin') }}">Ya tengo una cuenta</a>
+                <button type="submit" class="btn btn-primary btn-block">Registrar</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

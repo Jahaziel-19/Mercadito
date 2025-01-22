@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reconocimiento Facial en Tiempo Real</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+        #video {
+            width: 80%;
+            border: 2px solid #ccc;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Reconocimiento Facial en Tiempo Real</h1>
+
+    <video id="video" autoplay></video>
+    <button id="capture" class="btn">Capturar Imagen</button>
+
+    <div id="result"></div>
+
+    <script>
+        const video = document.getElementById('video');
+        const resultDiv = document.getElementById('result');
+
+        // Acceder a la cámara
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                console.error("Error al acceder a la cámara:", err);
+            });
+
+        // Capturar imagen y enviar al servidor
+        document.getElementById('capture').addEventListener('click', () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0);
+
+            canvas.toBlob(blob => {
+                const formData = new FormData();
+                formData.append('image', blob, 'captura.jpg');
+
+                fetch('/recognize', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    resultDiv.innerHTML = ''; // Limpiar resultados anteriores
+
+                    if (data.success) {
+                        resultDiv.innerHTML += `<h2>Resultados:</h2>`;
+                        data.matches.forEach(match => {
+                            resultDiv.innerHTML += `<p>${match.name}: ${match.confidence}%</p>`;
+                        });
+                    } else {
+                        resultDiv.innerHTML = `<p>No se reconoció a nadie.</p>`;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
+
+</body>
+</html>

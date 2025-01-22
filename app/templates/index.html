@@ -1,6 +1,55 @@
 {% extends 'base.html' %}
 {% block title %}Inicio{% endblock %}
-{% block head %}{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    .carousel-item img {
+        max-height: 300px; /* Ajusta la altura máxima según tus necesidades */
+        object-fit: cover; /* Asegura que la imagen se ajuste sin distorsionarse */
+    }
+</style>
+{% endblock %}
 {% block content %}
-<h1>Bienvenido</h1>
+<div class="container text-center my-1">
+    <img src="{{ url_for('static', filename='logo_ut.png') }}" alt="Logo UT de Oriental" class="img-fluid mb-3" style="width: 100px;">
+    <h1 class="display-4">Martes de Mercadito</h1>
+</div>
+
+<!-- Carrusel de imágenes -->
+<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+    <div class="carousel-inner">
+        {% for imagen in imagenes_carrusel %}
+        <div class="carousel-item {% if loop.index0 == 0 %}active{% endif %}">
+            <img src="{{ url_for('static', filename='carrusel/' ~ imagen) }}" class="d-block w-100" alt="Imagen del carrusel {{ loop.index }}">
+        </div>
+        {% endfor %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev" aria-label="Previous">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next" aria-label="Next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    </button>
+</div>
+
+<div class="container my-5">
+    <h2 class="text-center mb-4">Regístrate como:</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-3 mb-3">
+            <a class="btn btn-primary btn-lg w-100" href="{{ url_for('registro_docente') }}">
+                <i class="fas fa-chalkboard-teacher"></i> Docente
+            </a>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a class="btn btn-primary btn-lg w-100" href="{{ url_for('registro_invitado') }}">
+                <i class="fas fa-user-friends"></i> Invitado
+            </a>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a class="btn btn-primary btn-lg w-100" href="{{ url_for('registro_alumno') }}">
+                <i class="fas fa-user-graduate"></i> Alumno
+            </a>
+        </div>
+    </div>
+</div>
 {% endblock %}

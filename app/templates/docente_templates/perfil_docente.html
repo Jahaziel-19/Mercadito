@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% block title %}Mi perfil{% endblock %}
+{% block head %}
+{% endblock %}
+{% block content %}
+<div class="tab-content flex-grow-1 p-3" id="page-content-wrapper">
+    {#
+    <div class="tab-pane fade show active" id="carrito">
+        <h1 class="mt-4">Mi Carrito</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Foto</th>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item, producto in carrito %}
+                <tr>
+                    <td><img src="/{{ producto.imagen_producto }}" alt="{{ producto.nombre_producto }}"
+                            style="width: 50px; height: auto;"></td>
+                    <td>{{ producto.nombre_producto }}</td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>${{ item.total }}</td>
+                    <td>
+                        <a href="{{ url_for('editar_carrito', id=item.id) }}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{{ url_for('eliminar_carrito', id=item.id) }}" class="btn btn-danger btn-sm"
+                            onclick="return confirm('¿Estás seguro de eliminar {{ producto.nombre_producto }}?');">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <form method="POST" action="{{ url_for('pedir_carrito') }}">
+            <button type="submit" class="btn btn-primary">Pedir carrito</button>
+        </form>
+    </div>
+    <div class="tab-pane fade" id="pedidos">
+        <h1 class="mt-4">Mis Pedidos</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Foto</th>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                    <th>Estatus</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido, producto in pedidos %}
+                <tr>
+                    <td><img src="/{{ producto.imagen_producto }}" alt="{{ producto.nombre_producto }}"
+                            style="width: 50px; height: auto;"></td>
+                    <td>{{ pedido.id }}</td>
+                    <td>{{ producto.nombre_producto }}</td>
+                    <td>{{ pedido.cantidad }}</td>
+                    <td>${{ pedido.total }}</td>
+                    <td>{{ pedido.estatus }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    #}
+    <!-- Cerrar pedidos -->
+    <div class="tab-pane fade show active" id="cerrar_pedidos">
+        <h1 class="mt-4">Cerrar pedidos</h1>
+        <button class="btn btn-primary mb-3" onclick="showCloseModal()">Cerrar Pedido</button>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Nombre del Producto</th>
+                    <th>Cantidad</th>
+                    <th>Notas</th>
+                    <th>ID Usuario</th>
+                    <th>Cerrado por</th>
+                    <th>Estatus</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido, productos in productos_pedidos_cerrados %}
+                <tr>
+                    <td>
+                        {% if productos %}
+                            <img src="/{{ productos[0].producto.imagen_producto }}" alt="{{ productos[0].producto.nombre_producto }}" style="width: 50px; height: auto;">
+                        {% endif %}
+                    </td>
+                    <td>
+                        <ul>
+                            {% for producto in productos %}
+                                <li>{{ producto.producto.nombre_producto }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            {% for producto in productos %}
+                                <li>{{ producto.cantidad }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>{{ pedido.notas }}</td>
+                    <td>{{ pedido.id_usuario }}</td>
+                    <td>{{ pedido.id_usuario_cierre }}</td>
+                    <td>{{ pedido.estatus }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal para cerrar pedido -->
+    <div class="modal fade" id="closeModal" tabindex="-1" aria-labelledby="closeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="closeModalLabel">Cerrar Pedido</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="closeForm" method="POST" action="{{ url_for('cerrar_pedido') }}">
+                        <div class="form-group">
+                            <label for="pedido_id">ID del Pedido</label>
+                            <input type="text" class="form-control" id="pedido_id" name="pedido_id" required>
+                            <input type="hidden" name="{{ current_user.id }}">
+                        </div>
+                        <input type="hidden" name="carrera" value="{{ current_user.carrera }}">
+                        <button type="submit" class="btn btn-primary">Cerrar Pedido</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>    
+</div>
+
+{% endblock %}

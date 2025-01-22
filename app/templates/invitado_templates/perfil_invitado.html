@@ -1,53 +1,51 @@
 {% extends 'base.html' %}
 {% block title %}Mi perfil{% endblock %}
-{% block head %}{% endblock %}
+{% block head %}
+{% endblock %}
 {% block content %}
 <div class="tab-content flex-grow-1 p-3" id="page-content-wrapper">
     <div class="tab-pane fade show active" id="carrito">
         <h1 class="mt-4">Mi Carrito</h1>
-        <div class="table-responsive"> <!-- Agregado para hacer la tabla responsiva -->
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Foto</th>
-                        <th>Nombre</th>
-                        <th>Cantidad</th>
-                        <th>Total</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item, producto in carrito %}
-                    <tr>
-                        <td><img src="/{{ producto.imagen_producto }}" alt="{{ producto.nombre_producto }}" style="width: 50px; height: auto;"></td>
-                        <td>{{ producto.nombre_producto }}</td>
-                        <td>{{ item.cantidad }}</td>
-                        <td>${{ item.total }}</td>
-                        <td>
-                            <a href="{{ url_for('editar_carrito', id=item.id) }}" class="btn btn-warning btn-sm">Editar</a>
-                            <a href="{{ url_for('eliminar_carrito', id=item.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar {{ producto.nombre_producto }}?');">Eliminar</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div> <!-- Fin de la tabla responsiva -->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Foto</th>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item, producto in carrito %}
+                <tr>
+                    <td><img src="/{{ producto.imagen_producto }}" alt="{{ producto.nombre_producto }}" style="width: 50px; height: auto;"></td>
+                    <td>{{ producto.nombre_producto }}</td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>${{ item.total }}</td>
+                    <td>
+                        <a href="{{ url_for('editar_carrito', id=item.id) }}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{{ url_for('eliminar_carrito', id=item.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar {{ producto.nombre_producto }}?');">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         <form method="POST" action="{{ url_for('pedir_carrito') }}">
             <button type="submit" class="btn btn-primary">Pedir carrito</button>
         </form>
     </div>
-
     <div class="tab-pane fade" id="pedidos">
         <h1 class="mt-4">Mis Pedidos</h1>
-        <div class="table-responsive"> <!-- Agregado para hacer la tabla responsiva -->
-            <table class="table table-striped">
+        <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>Imagen</th>
                         <th>Productos</th>
+                        <th>Cantidad</th>
                         <th>Total</th>
                         <th>Estatus</th>
-                        <th>Mostrar ID</th>
+                        <th>Mostrar ID </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,24 +57,22 @@
                             {% endif %}
                         </td>
                         <td>
-                            <ul class="list-unstyled mb-0"> <!-- Eliminar margen inferior -->
+                            <ul>
                                 {% for producto in productos %}
-                                    <li><strong>Nombre: </strong>{{ producto.producto.nombre_producto }}<br><strong>Cantidad: </strong>{{ producto.cantidad }}<br><strong>Total:</strong> ${{ producto.subtotal }}</li>
+                                    <li>Producto ID: {{ producto.id_producto }} - Nombre: {{ producto.producto.nombre_producto }} - Cantidad: {{ producto.cantidad }} - Total: ${{ producto.subtotal }}</li>
                                 {% endfor %}
                             </ul>
                         </td>
+                        <td>{{ productos[0].cantidad }}</td>
                         <td>${{ pedido.total }}</td>
                         <td>{{ pedido.estatus }}</td>
-                        <td><button class="btn btn-info btn-sm" onclick="showQRCodeModal('{{ pedido.id }}')">Mostrar ID de Pedido</button></td> <!-- Botón más pequeño -->
+                        <td><button class="btn btn-info" onclick="showQRCodeModal('{{ pedido.id }}')">Mostrar ID de Pedido</td>
                     </tr>
                     {% endfor %}
                 </tbody>
-            </table>
-        </div> <!-- Fin de la tabla responsiva -->
+        </table>
     </div>
-
 </div>
-
 <!-- Modal de Código QR -->
 <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -93,9 +89,7 @@
         </div>
     </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-
 <script>
     function showQRCodeModal(pedidoId) {
         // Generar el código QR
