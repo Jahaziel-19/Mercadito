@@ -1,28 +1,15 @@
 {% extends 'base.html' %}
 {% block title %}Productos y servicios{% endblock %}
-{% block head %}   <style>
-    .card {
-        margin: 20px;
-        transition: transform .2s;
-    }
-    .card:hover {
-        transform: scale(1.05);
-    }
-    .card img {
-        height: 200px;
-        object-fit: cover;
-    }
-</style>{% endblock %}
+{% block head %} 
+  
+{% endblock %}
 {% block content %}
 <div class="container mt-5">
     <h1 class="text-center mb-5">Productos y Servicios</h1>
-    <form class="form-inline mb-4">
-        {% if query %}
-        <input type="text" class="form-control mr-2" name="query" placeholder="Buscar productos..."  default="" value="{{ query }}">
-        {% else %}
-        <input type="text" class="form-control mr-2" name="query" placeholder="Buscar productos...">
-        {% endif %}
-        <select class="form-control mr-2" name="carrera">
+    <form class="form-inline search-bar mb-4 d-flex justify-content-center align-items-center">
+        <input type="text" class="form-control me-2" name="query" placeholder="Buscar productos..."
+            value="{{ query if query else '' }}">
+        <select class="form-control me-2" name="carrera">
             <option value="all">Todas las Carreras</option>
             {% for carrera in carreras %}
             <option value="{{ carrera.nombre }}" {% if carrera.nombre == filter_carrera %}selected{% endif %}>{{ carrera.nombre }}</option>
@@ -30,20 +17,24 @@
         </select>
         <button type="submit" class="btn btn-primary">Buscar</button>
     </form>
-    <div class="row">
+    <div class="row justify-content-center">
         {% for producto in productos %}
-        <div class="col-md-4">
-            <a href="{{ url_for('previsualizar_producto', producto_id=producto.id) }}">
-            <div class="card">
-                <img src="{{ producto.imagen_producto }}" class="card-img-top" alt="{{ producto.nombre_producto }}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ producto.nombre_producto }}</h5>
-                    <p class="card-text"><span class="text-white badge bg-info">${{ producto.precio }}</span>
-                    </p>
+        <div class="col-md-4 col-lg-3 d-flex align-items-stretch">
+            <a href="{{ url_for('previsualizar_producto', producto_id=producto.id) }}" class="text-decoration-none">
+                <div class="card">
+                    <img src="{{ producto.imagen_producto }}" class="card-img-top" alt="{{ producto.nombre_producto }}">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ producto.nombre_producto }}</h5>
+                        <p class="card-text">
+                            <span class="text-white badge bg-info">
+                                ${{ producto.precio }}
+                            </span>
+                        </p>
+                    </div>
                 </div>
-            </div>
             </a>
         </div>
         {% endfor %}
     </div>
+</div>
 {% endblock %}

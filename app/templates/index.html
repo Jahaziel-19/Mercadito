@@ -10,20 +10,22 @@
 </style>
 {% endblock %}
 {% block content %}
-<div class="container text-center my-1">
+<div class="container text-carrousel text-center my-1">
     <img src="{{ url_for('static', filename='logo_ut.png') }}" alt="Logo UT de Oriental" class="img-fluid mb-3" style="width: 100px;">
     <h1 class="display-4">Martes de Mercadito</h1>
 </div>
 
 <!-- Carrusel de imágenes -->
 <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+    
     <div class="carousel-inner">
         {% for imagen in imagenes_carrusel %}
         <div class="carousel-item {% if loop.index0 == 0 %}active{% endif %}">
             <img src="{{ url_for('static', filename='carrusel/' ~ imagen) }}" class="d-block w-100" alt="Imagen del carrusel {{ loop.index }}">
-        </div>
+    </div>
         {% endfor %}
     </div>
+
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev" aria-label="Previous">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
     </button>

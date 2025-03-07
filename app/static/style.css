@@ -96,15 +96,35 @@ i {
   right: 20px;
 }
 
+.text-carrousel {
+  padding: 0;
+  position: absolute;
+  z-index: 10;
+  
+  max-width: 100vw;
+}
+.text-carrousel h1 {
+  color: white;
+  font-size: 3rem;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 5%;
+  margin-bottom: 6%;
+}
+
 
 /* CARRUSEL */
+
 .carrousel {
   z-index: 1;
 }
 
+.carousel-color {
+  background-color: #02737385;
+}
 .carousel-item img {
   width: 100%;
-  height: 30rem; /* Ajusta la altura según tus necesidades */
+  height: 60rem;
   object-fit: cover; /* Hace que la imagen se ajuste al contenedor */
 }
 
@@ -127,6 +147,16 @@ i {
   background-color: var(--color-1);
 }
 
+
+footer {
+  background-color: var(--color-1);
+  color: var(--color-4);
+  padding: 20px;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
 /*QR scan*/
 #qr-video {
   border: 1px solid black;
@@ -143,4 +173,34 @@ i {
     }
   }
 
-  
+/*Estilos seccion de productos y servicios*/
+
+.card {
+  margin: 20px;
+  transition: transform .2s, box-shadow .2s;
+}
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.card img {
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 3px solid #007bff;
+}
+.search-bar {
+  background-color: #f8f9fa;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+.search-bar input,
+.search-bar select {
+  border: none;
+  box-shadow: none;
+  width: 30vw;
+}
+.search-bar button {
+  background-color: #007bff;
+  border-color: #007bff;
+  border-radius: 20px;
+}
