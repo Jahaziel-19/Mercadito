@@ -1,0 +1,10 @@
+[
+  {
+    "type": "sqlite",
+    "path": "c:\\Users\\Jahaziel\\Documents\\GitHub\\Mercadito\\app\\instance\\database.sqlite3"
+  },
+  {
+    "type": "sqlite",
+    "path": "c:\\Users\\Jahaziel\\Documents\\GitHub\\Mercadito\\app\\data\\database.sqlite3"
+  }
+]

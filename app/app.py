@@ -548,48 +548,7 @@ def pedir_carrito():
     flash('Pedido creado exitosamente y se notificó a los administradores.', 'success')
     return redirect(url_for(f'perfil_{rol}'))
 
-'''
-@app.route('/pedir_carrito', methods=['POST'])
-@login_required
-def pedir_carrito():
-    carrito_items = Carrito.query.filter(
-        (Carrito.id_usuario == current_user.id)).all() # | (Carrito.id_admin == current_user.id)
 
-    if not carrito_items:
-        flash('Tu carrito esta vacío', 'warning')
-        return redirect(url_for('perfil_alumno'))
-        
-    total_pedido = sum(item.total for item in carrito_items)
-    notas_pedido = request.form.get('notas', '')
-    
-    nuevo_pedido = Pedido(
-        id=random_int(8),
-        id_usuario=current_user.id,
-        total=total_pedido,
-        notas=notas_pedido,
-        estatus='abierto'
-    )
-
-    db.session.add(nuevo_pedido)
-    db.session.flush()
-
-    for item in carrito_items:
-        nuevo_detalle = PedidoDetalle(
-            pedido_id=nuevo_pedido.id,
-            id_producto=item.id_producto,
-            cantidad=item.cantidad,
-            subtotal=item.total
-        )
-        db.session.add(nuevo_detalle)
-
-    # Vaciar el carrito después de crear los pedidos
-    for item in carrito_items:
-        db.session.delete(item)
-
-    db.session.commit()
-    flash('Pedido creado exitosamente.', 'success')
-    return redirect(url_for('perfil_alumno'))
-'''
 # Ruta para eliminar un item del carrito
 @app.route('/eliminar_carrito/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -775,8 +734,13 @@ def editar_producto(producto_id):
         producto.imagen_producto = imagen_path
         producto.nombre_producto = request.form['nombre_producto']
         producto.precio = request.form['precio']
-        producto.medida = str(str(request.form.get('numero_medida', None)) + request.form.get('medida', None))
         producto.descripcion = request.form['descripcion']
+        
+        if str(str(request.form.get('numero_medida', None)) and request.form.get('medida', None)):
+            producto.medida = str(str(request.form.get('numero_medida', None)) + request.form.get('medida', None))
+        else: 
+            producto.medida = ""
+        
         
         db.session.commit()
         flash(f'¡{producto.nombre_producto} editado!', category='success')
@@ -1194,59 +1158,6 @@ def reset_password(token):
 
     return render_template('reset_password.html', token=token)
 
-#_________________________________________________________________________________________________
-
-@app.route('/face', methods=['GET', 'POST'])
-def face():
-    return render_template('face_recognition.html')
-
-# Reconocimiento facial
-@app.route('/recognize', methods=['POST', 'GET'])
-def recognize():
-    if 'image' not in request.files:
-        return jsonify(success=False)
-
-    image_file = request.files['image']
-    image = face_recognition.load_image_file(image_file)
-
-    # Aquí debes implementar tu lógica para comparar la imagen
-    known_face_encodings = [...]  # Lista de encodings conocidos
-    known_face_names = [...]       # Lista de nombres correspondientes
-
-    face_encodings = face_recognition.face_encodings(image)
-    
-    matches = []
-
-    for face_encoding in face_encodings:
-        results = face_recognition.compare_faces(known_face_encodings, face_encoding)
-        
-        for i in range(len(results)):
-            if results[i]:
-                matches.append({'name': known_face_names[i], 'confidence': 100})  # Ajusta según sea necesario
-
-    return jsonify(success=True, matches=matches)
-
-@app.route('/register', methods=['POST', 'GET'])
-def register():
-    if 'image' not in request.files or 'name' not in request.form:
-        return jsonify(success=False)
-
-    image_file = request.files['image']
-    name = request.form['name']
-    image = face_recognition.load_image_file(image_file)
-    
-    # Obtener el encoding del rostro
-    encoding = face_recognition.face_encodings(image)
-
-    if len(encoding) == 0:
-        return jsonify(success=False, message="No se detectó ningún rostro.")
-
-    # Aquí debes almacenar el encoding y el nombre en tu base de datos o en un archivo
-    # Ejemplo: almacenar en una lista (esto es solo un ejemplo, deberías usar una base de datos)
-    known_face_encodings.append(encoding[0])  # Agregar el encoding a la lista
-    known_face_names.append(name)               # Agregar el nombre a la lista
-
-    return jsonify(success=True, message="Rostro registrado exitosamente.")
 
 
 # Cierre de sesión para todo usuario
