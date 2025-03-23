@@ -1,4 +1,4 @@
-/app/__init__.py
-/app/routes
-/app/.env
-/entornoMercadito
+app/__init__.py
+app/routes
+app/.env
+entornoMercadito
