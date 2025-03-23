@@ -147,6 +147,12 @@ i {
   background-color: var(--color-1);
 }
 
+.text-carrousel h1 {
+  background-color:#004454aa;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+
 
 footer {
   background-color: var(--color-1);
@@ -156,6 +162,10 @@ footer {
   position: fixed;
   bottom: 0;
   width: 100%;
+}
+
+footer p a {
+  color: #fff;
 }
 /*QR scan*/
 #qr-video {

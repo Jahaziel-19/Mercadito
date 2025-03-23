@@ -638,25 +638,35 @@ def perfil_admin():
     productos = Producto.query.filter_by(carrera=current_user.carrera).all()
 
     # Obtener pedidos abiertos relacionados con la carrera del admin
-    pedidos = db.session.query(Pedido).filter(Pedido.estatus != 'cerrado').all()
-
-    # Obtener productos asociados a los pedidos abiertos
     productos_pedidos = []
-    for pedido in pedidos:
-        productos_asociados = PedidoProducto.query.filter_by(id_pedido=pedido.id).all()
-        productos_pedidos.append((pedido, productos_asociados))
+    pedidos_abiertos = db.session.query(Pedido).filter(Pedido.estatus != 'cerrado').all()
+    for pedido in pedidos_abiertos:
+        productos_asociados = PedidoProducto.query.filter_by(
+            id_pedido=pedido.id,
+            carrera=current_user.carrera  # Asegurar que los productos sean de la misma carrera
+        ).all()
+        
+        if productos_asociados:  # Solo incluir pedidos con productos de la misma carrera
+            productos_pedidos.append((pedido, productos_asociados))
 
     # Obtener pedidos cerrados relacionados con la carrera del admin
-    pedidos_cerrados = db.session.query(Pedido).filter(Pedido.estatus == 'cerrado').all()
-
-    # Obtener productos asociados a los pedidos cerrados
     productos_pedidos_cerrados = []
+    pedidos_cerrados = db.session.query(Pedido).filter(Pedido.estatus == 'cerrado').all()
     for pedido in pedidos_cerrados:
-        productos_asociados = PedidoProducto.query.filter_by(id_pedido=pedido.id).all()
-        productos_pedidos_cerrados.append((pedido, productos_asociados))
+        productos_asociados = PedidoProducto.query.filter_by(
+            id_pedido=pedido.id,
+            carrera=current_user.carrera  # Filtrar también por carrera
+        ).all()
+        
+        if productos_asociados:  # Solo incluir pedidos cerrados con productos válidos
+            productos_pedidos_cerrados.append((pedido, productos_asociados))
 
     # Obtener carrito del admin (si aplica)
-    carrito = db.session.query(Carrito, Producto).join(Producto, Carrito.id_producto == Producto.id).filter(Carrito.id_usuario == current_user.id).all()
+    carrito = db.session.query(Carrito, Producto).join(
+        Producto, Carrito.id_producto == Producto.id
+    ).filter(
+        Carrito.id_usuario == current_user.id
+    ).all()
 
     return render_template(
         'admin_templates/perfil_admin.html',
@@ -664,7 +674,6 @@ def perfil_admin():
         productos_pedidos=productos_pedidos,
         productos_pedidos_cerrados=productos_pedidos_cerrados,
         carrito=carrito,
-        pedidos=pedidos,
         estatus=estatus
     )
 

@@ -116,27 +116,6 @@ class Carrito(db.Model):
     cantidad = db.Column(db.Integer, nullable=False)
     notas = db.Column(db.String)
     total = db.Column(db.Float, nullable=False)    
-'''
-class Pedido(db.Model):
-    id = db.Column(db.Integer, primary_key=True, unique=True)
-    id_producto = db.Column(db.Integer, nullable=False)
-    id_usuario = db.Column(db.String)# nullable=False
-    id_usuario_cierre = db.Column(db.String)
-    cantidad = db.Column(db.Integer, nullable=False)
-    total = db.Column(db.Float, nullable=False)
-    notas = db.Column(db.String)
-    estatus = db.Column(db.String, default="abierto")
-    #fecha_pedido
-    #fecha_recibido
-    #fecha_limite
-
-class PedidoDetalle(db.Model):
-    id = db.Column(db.Integer, primary_key=True, unique=True)
-    id_pedido = db.Column(db.Integer, nullable=False)
-    id_producto = db.Column(db.Integer, nullable=False)
-    cantidad = db.Column(db.Integer, nullable=False)
-    subtotal = db.Column(db.Float, nullable=False)
-'''
 
 class Pedido(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
