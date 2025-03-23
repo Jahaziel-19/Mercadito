@@ -191,6 +191,7 @@ def login_invitado():
 
 @app.route('/perfil_invitado')
 @login_required
+@roles_required(RolEnum.INVITADO.value)
 def perfil_invitado():
     # Obtener pedidos del invitado
     pedidos = db.session.query(Pedido).filter(Pedido.id_usuario == current_user.id).all()
@@ -280,6 +281,7 @@ def login_docente():
 
 @app.route('/perfil_docente')
 @login_required
+@roles_required(RolEnum.DOCENTE.value)
 def perfil_docente():  
     estatus = {
         'abierto':'bg-warning',
@@ -364,6 +366,7 @@ def login():
 
 @app.route('/perfil_alumno', methods=['POST', 'GET'])
 @login_required
+@roles_required(RolEnum.ALUMNO.value)
 def perfil_alumno():
     if current_user.rol != 'ALUMNO':
         flash('No tienes permiso para acceder a este perfil', category='danger')
@@ -563,12 +566,9 @@ def eliminar_carrito(id):
 
 
 
-
-
 # --------------- ADMIN -----------------
 # Registro de usuario Administrador
 @app.route('/registro_admin', methods=['POST', 'GET'])
-# @login_required
 def registro_admin():
     if request.method == 'POST':
         id = request.form['id']
@@ -622,6 +622,7 @@ def login_admin():
 
 @app.route('/perfil_admin', methods=['POST', 'GET'])
 @login_required
+@roles_required(RolEnum.ADMIN.value)
 def perfil_admin():
     if current_user.rol != 'ADMIN':
         return redirect(url_for('index'))
@@ -670,6 +671,7 @@ def perfil_admin():
 # Crear producto
 @app.route('/crear_producto', methods=['POST', 'GET'])
 @login_required
+@roles_required(RolEnum.ADMIN.value)
 def crear_producto():
     if request.method == 'POST':
         nombre_producto = request.form['nombre_producto']
@@ -712,6 +714,7 @@ def crear_producto():
 # Editar producto
 @app.route('/editar_producto/<int:producto_id>', methods=['GET', 'POST'])
 @login_required
+@roles_required(RolEnum.ADMIN.value)
 def editar_producto(producto_id):
     if current_user.rol != 'ADMIN':
         return redirect(url_for('login'))
@@ -751,6 +754,7 @@ def editar_producto(producto_id):
 # Eliminar producto
 @app.route('/eliminar_producto/<int:producto_id>', methods=['GET', 'POST'])
 @login_required
+@roles_required(RolEnum.ADMIN.value)
 def eliminar_producto(producto_id):
     if current_user.rol != 'ADMIN':
         return redirect(url_for('index'))
@@ -993,11 +997,6 @@ def confirmar_cierre_pedido():
 
 
 
-
-
-
-
-
 # Muestra la página de todos los productos y servicios
 @app.route('/productos_servicios', methods=['GET'])
 @login_required
@@ -1014,9 +1013,6 @@ def productos_servicios():
     productos = productos.all()
     carreras = Carrera.query.all()
     return render_template('productos_servicios.html',  productos=productos, carreras=carreras, query=query, filter_carrera=filter_carrera)
-
-
-
 
 
 # Escaneo de QR
@@ -1104,8 +1100,6 @@ def actualizar_foto_perfil():
     return redirect(url_for(f'perfil_{str(usuario.rol).lower()}'))  # Redirigir al perfil del usuario o a la página adecuada
 
 
-
-
 # --------------- RUTAS PARA CAMBIAR CONTRASEÑA -----------------
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password_request():
@@ -1157,8 +1151,6 @@ def reset_password(token):
             return redirect(url_for('index'))
 
     return render_template('reset_password.html', token=token)
-
-
 
 # Cierre de sesión para todo usuario
 @app.route('/logout', methods=['POST', 'GET'])
