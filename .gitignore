@@ -1,5 +1,3 @@
-app/__init__.py
-app/routes
 app/.env
 app/instance
 entornoMercadito
