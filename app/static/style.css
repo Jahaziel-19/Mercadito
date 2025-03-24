@@ -30,15 +30,23 @@ hr {
   background-color: var(--color-1);
 }
 #sidebar.small {
-  width: 70px;
+  width: 80px;
 }
 
 #sidebar.small .nav-link .text {
   display: none;
 }
+
+#sidebar.small .flex-column .dropdown a strong {
+  display: none;
+}
+
 #sidebar.small .nav-link .icon {
   display: flex;
   align-items: center;
+}
+#sidebar.small .flex-column {
+  padding: 0;
 }
 
 #sidebar .nav-link i {

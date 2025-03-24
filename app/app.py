@@ -20,13 +20,13 @@ from flask_login import LoginManager, current_user, login_required, login_user, 
 from flask_migrate import Migrate # Realizar migraciones en la base de datos
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
+from routes import register_blueprints  # Importa la función para registrar Blueprints
 
 # Módulos personalizados
 from config import Config # Importar configuraciones
 from models import db, RolEnum, Invitado, Alumno, Docente, Carrera, Producto, Pedido, PedidoProducto, Admin, Carrito # Importación de modelos
 from scripts import random_int, verificar_correo_existente #, enviar_correo
-#from app.recognition import registrar_docente, reconocer_usuario
-#import face_recognition
+
 import numpy as np
 app = Flask(__name__) # Declaración de la app
 app.config.from_object(Config) # Declaración de las configuraciones
@@ -60,21 +60,6 @@ def load_user(user_id):
     else:
         return None
 
-
-
-
-# Permisos
-def roles_required(*roles):
-    def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            if current_user.rol in roles:
-                return func(*args, **kwargs)
-            else:
-                flash('No tienes permiso para acceder a esta página', 'danger')
-                return redirect(url_for('index'))
-        return wrapper
-    return decorator
 
 # Generar token para reestablecimiento de contraseña
 def generate_reset_token(email):
@@ -121,6 +106,7 @@ def index():
     return render_template('index.html', imagenes_carrusel=imagenes_carrusel)
 
 # --------------- INVITADO -----------------
+'''
 @app.route('/registro_invitado', methods=['GET', 'POST'])
 def registro_invitado():
     if request.method == 'POST':
@@ -191,7 +177,6 @@ def login_invitado():
 
 @app.route('/perfil_invitado')
 @login_required
-@roles_required(RolEnum.INVITADO.value)
 def perfil_invitado():
     # Obtener pedidos del invitado
     pedidos = db.session.query(Pedido).filter(Pedido.id_usuario == current_user.id).all()
@@ -206,9 +191,10 @@ def perfil_invitado():
     carrito = db.session.query(Carrito, Producto).join(Producto, Carrito.id_producto == Producto.id).filter(Carrito.id_usuario == current_user.id).all()
 
     return render_template('invitado_templates/perfil_invitado.html', carrito=carrito, productos_pedidos=productos_pedidos)
-
+'''
 
 # --------------- DOCENTE -----------------
+'''
 @app.route('/registro_docente', methods=['GET', 'POST'])
 def registro_docente():
     if request.method == 'POST':
@@ -281,7 +267,6 @@ def login_docente():
 
 @app.route('/perfil_docente')
 @login_required
-@roles_required(RolEnum.DOCENTE.value)
 def perfil_docente():  
     estatus = {
         'abierto':'bg-warning',
@@ -305,9 +290,10 @@ def perfil_docente():
     # Obtener carrito del docente
     carrito = db.session.query(Carrito, Producto).join(Producto, Carrito.id_producto == Producto.id).filter(Carrito.id_usuario == current_user.id).all()
     return render_template('docente_templates/perfil_docente.html', carrito=carrito, pedidos=pedidos, pedidos_cerrados=pedidos_cerrados, estatus=estatus)
-
+'''
 
 # --------------- ALUMNO -----------------
+'''
 @app.route('/registro_alumno', methods=['GET', 'POST'])
 def registro_alumno():
     if request.method == 'POST':
@@ -384,8 +370,10 @@ def perfil_alumno():
     carrito = db.session.query(Carrito, Producto).join(Producto, Carrito.id_producto == Producto.id).filter(Carrito.id_usuario == current_user.id).all()
 
     return render_template('perfil_alumno.html', carrito=carrito, productos_pedidos=productos_pedidos)
+'''
 
 # Previsualizacion del producto
+'''
 @app.route('/previsualizar_producto/<int:producto_id>', methods=['GET', 'POST'])
 @login_required
 def previsualizar_producto(producto_id):
@@ -396,7 +384,9 @@ def previsualizar_producto(producto_id):
         sub_total = cantidad * producto.precio
         notas = request.form.get('notas', '')
     return render_template('previsualizar_producto.html', producto=producto)
+'''
 
+'''
 @app.route('/pedido/<int:producto_id>', methods=['POST'])
 @login_required
 def pedido(producto_id):
@@ -429,7 +419,8 @@ def pedido(producto_id):
 
     flash('Pedido generado', category='success')
     return redirect(url_for(f'perfil_{(current_user.rol).lower()}'))
-
+'''
+'''
 @app.route('/agregar_carrito/<int:producto_id>', methods=['POST'])
 @login_required
 def agregar_carrito(producto_id):
@@ -462,8 +453,9 @@ def agregar_carrito(producto_id):
 
     flash('Producto agregado al carrito', category='success')
     return redirect(url_for(f'perfil_{rol}'))
-
+'''
 # Ruta para editar un item del carrito
+'''
 @app.route('/editar_carrito/<int:id>', methods=['GET', 'POST'])
 @login_required
 def editar_carrito(id):
@@ -484,8 +476,9 @@ def editar_carrito(id):
         return redirect(url_for(f'perfil_{rol}'))
 
     return render_template('editar_carrito.html', item=item, producto=producto)
-
+'''
 # Pedir items de carrito
+'''
 @app.route('/pedir_carrito', methods=['POST'])
 @login_required
 def pedir_carrito():
@@ -563,10 +556,11 @@ def eliminar_carrito(id):
     db.session.commit()
     flash(f'{producto.nombre_producto} eliminado de tu carrito', category='success')
     return redirect(url_for(f'perfil_{rol}'))
-
+'''
 
 
 # --------------- ADMIN -----------------
+'''
 # Registro de usuario Administrador
 @app.route('/registro_admin', methods=['POST', 'GET'])
 def registro_admin():
@@ -986,12 +980,6 @@ def confirmar_cierre_pedido():
     # Cambiar el estatus de los productos filtrados a "entregado"
     for producto in productos_carrera:
         producto.estatus = 'cerrado'
-        '''
-        if current_user.rol:
-            #producto.id_usuario_cierre = f'(ADMIN) {current_user.id} {current_user.nombre}'
-        else:
-            #producto.id_usuario_cierre = f'{current_user.id} {current_user.nombre}'
-        '''
 
     # Verificar si todos los productos del pedido están entregados
     todos_entregados = all(producto.estatus == 'entregado' for producto in pedido.productos)
@@ -1003,10 +991,11 @@ def confirmar_cierre_pedido():
 
     flash('Pedido cerrado con éxito', 'success')
     return redirect(url_for(f'perfil_{current_user.rol.lower()}'))
-
+'''
 
 
 # Muestra la página de todos los productos y servicios
+'''
 @app.route('/productos_servicios', methods=['GET'])
 @login_required
 def productos_servicios():
@@ -1022,11 +1011,10 @@ def productos_servicios():
     productos = productos.all()
     carreras = Carrera.query.all()
     return render_template('productos_servicios.html',  productos=productos, carreras=carreras, query=query, filter_carrera=filter_carrera)
-
+'''
 
 # Escaneo de QR
 @app.route('/escaner', methods=['GET', 'POST'])
-@roles_required(RolEnum.ADMIN.value, RolEnum.DOCENTE.value)
 def escaner():
     user = {
         "nombre": current_user.nombre,
@@ -1036,9 +1024,8 @@ def escaner():
     print("user: ", user)  # Esto imprime el diccionario user en el servidor
     return render_template('qr_scan.html', user=user)
 
-
+'''
 @app.route('/obtener_pedido/<int:pedido_id>', methods=['GET'])
-@roles_required(RolEnum.ADMIN.value, RolEnum.DOCENTE.value)
 def obtener_pedido(pedido_id):
     carrera = current_user.carrera
     # Filtrar por id del pedido y carrera del usuario actual
@@ -1051,7 +1038,7 @@ def obtener_pedido(pedido_id):
         return jsonify(productos_dict)
     else:
         return jsonify({'error': 'Pedido no encontrado, favor de verificar'}), 404
-
+'''
 
 # --------------- Actualizar foto de perfil -----------------
 @app.route('/actualizar_foto_perfil', methods=['GET', 'POST'])
@@ -1106,7 +1093,7 @@ def actualizar_foto_perfil():
         flash('No se seleccionó ninguna imagen válida.', 'danger')
 
 
-    return redirect(url_for(f'perfil_{str(usuario.rol).lower()}'))  # Redirigir al perfil del usuario o a la página adecuada
+    return redirect(url_for(f'{str(usuario.rol).lower()}.perfil'))  # Redirigir al perfil del usuario o a la página adecuada
 
 
 # --------------- RUTAS PARA CAMBIAR CONTRASEÑA -----------------
@@ -1166,6 +1153,8 @@ def reset_password(token):
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+register_blueprints(app)
 
 if __name__ == '__main__':
     app.run(debug=True)

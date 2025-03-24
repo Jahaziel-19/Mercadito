@@ -13,7 +13,7 @@
             </div>
             <div class="col-md mt-4 mb-4">
                 <p class="card-text">{{ producto.descripcion }}</p>
-                <p><strong id="total">${{ producto.precio }}</strong></p>
+                <p><strong name="total" id="total">${{ producto.precio }}</strong></p>
             </div>
         </div>
         <div class="container-md mt-1 mb-3">
@@ -28,7 +28,7 @@
                         <textarea class="form-control" id="notas" name="notas" style="max-width: 100%; max-height: 7rem;"></textarea>
                     </div>
                     <div class="col mt-3">
-                        <button class="col-md mt-3 btn btn-success" type="button" onclick="submitForm('{{ url_for('agregar_carrito', producto_id=producto.id) }}')">Agregar a mi carrito</button>
+                        <button class="col-md mt-3 btn btn-success" type="button" onclick="submitForm('{{ url_for('carrito.agregar_carrito', producto_id=producto.id) }}')">Agregar a mi carrito</button>
                     </div>
                 </div>
             </form>

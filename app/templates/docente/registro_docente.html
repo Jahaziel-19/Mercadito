@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
-{% block title %}Registro Invitado{% endblock %}
+{% block title %}Registro Docente{% endblock %}
 {% block head %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 {% endblock %}
 {% block content %}
 <div class="container mt-5">
     <div class="card p-4 shadow">
-        <h1 class="text-center mb-4">Registro Invitado</h1>
+        <h1 class="text-center mb-4">Registro Docente</h1>
         <form method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="id">CURP</label>
+                    <label for="id">ID</label>
                     <input type="text" class="form-control" id="id" name="id" required>
                 </div>
                 <div class="col-md-6 mb-3">
@@ -24,17 +24,25 @@
                 <div class="col-md-6 mb-3">
                     <label for="apellido_materno">Apellido Materno</label>
                     <input type="text" class="form-control" id="apellido_materno" name="apellido_materno" required>
-                </div>        
-                <div class="col-md-12 mb-3">
+                </div>       
+                <div class="col-md-6 mb-3">
+                    <label for="carrera">Carrera</label>
+                    <select class="form-control" id="carrera" name="carrera" required>
+                        {% for carrera in carreras %}
+                            <option value="{{ carrera.nombre }}">{{ carrera.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div> 
+                <div class="col-md-6 mb-3">
                     <label for="email">Correo Electrónico</label>
                     <input type="email" class="form-control" id="email" name="email" required>
                 </div>
-                <div class="col-md-12 mb-3">
+                <div class="col-md-6 mb-3">
                     <label for="foto_perfil">Foto de Perfil</label>
                     <input type="file" class="form-control-file" id="foto_perfil" name="foto_perfil">
                 </div>
                 <div class="col-md-12 text-center mb-3">
-                    <a href="{{ url_for('login_invitado') }}">Ya tengo una cuenta</a>
+                    <a href="{{ url_for('docente.login') }}">Ya tengo una cuenta</a>
                 </div>
                 <div class="col-md-12 text-center">
                     <button type="submit" class="btn btn-primary btn-lg">Registrarse</button>

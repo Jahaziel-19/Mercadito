@@ -1,0 +1,141 @@
+<div class="d-flex" id="wrapper">
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" id="sidebar">
+        <button class="btn btn-dark toggle-sidebar" id="toggleSidebar">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="d-flex flex-column flex-shrink-0 text-bg-dark">
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto" id="sidebar-nav">
+                <li>
+                    {% if current_user.rol == 'ALUMNO' or current_user.rol == 'INVITADO' %}
+                    <a href="{{ url_for('productos.productos_servicios') }}" class="nav-link text-white">
+                        <img
+                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAACvUlEQVR4nO2TX0hTYRjGP4xt5NIZFgTe9OcmhO3Mkjwmc0O96KKLiK07CaoruxldBJJgF9WWx/VnUFYoG8RgTmrl1qbO2pYKXgQ7dr9c2cBlYtBGN6M33uF3/EY7NhjWRXvhge+c531/z+G85xBSrX9REKlrhKiqB7XxWtN1LdjdgxoMGgv3qIZD7d3UwzPrYS/1kCF5kbpG+eC40gpxFaByMXViINAFqJtBwwa9j3IET65QD8+sdyNg+Ea9XFQtbnlKq3xwTOWnjanZ/XEKcAb55XKDna/4Zep9fNMYl7yYyl86FEgNxJVfaePczGEp2B1ueV9uMPZSb37mEBu8jhm/B0cVehbwNNwiUsDLcPNiucH+qeZF6nlC+gTrQVSh33a/KNukYZ0CotNH3pYbjL3UQ0ZRcLzEntn9Zqf3FAapxNmmWHFwe3oruD3NemKkKcbOIkt2z5v7/U4b1gKaouBMuD7FwoUAn6MenlkvE6pPsbNrkxrmVauyRXsGD9kH3pqf4K0B1DvnATj/sFXSike9QD3su/KIS1IPz4wHnzzqBXYWWewsPCfF/zO4iRPcBLKPFfk7Fzug16b/YBE4sAxxc5kRBQdukkYf3GTYInDnzAL3A2URtGZwEUfBc5HPKyO1nFnQzeNsr02fvHuhA3JPFPnN2fulfykP2eu8ZEz2W07B2GWD9cyto9LTgY/sAhdpoNenB4/XWhz8bsl3kQbsodc4iwxkIRPZZLsK9J8IvbjKQ3Cg7SypsJCBLGT+sVkc0rmXhnSQEDhTpcHIQBYyq8FFBc+MfOpB61TSeQy+jPFWmDCaKhEykIVMZMsH+4wpmDDBjshnTFWDpaq+avhbH1d+vHN1p77q/HjnqmxwZrStD/+7nVBmtK1PNjhh4w4u2bVe0a6NiXbdvaXb2uuVCBnIQiayZYP/i/oFk19MdWZEt9gAAAAASUVORK5CYII=">
+                        <span class="text">Productos y servicios</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#carrito" class="nav-link text-white active" data-toggle="tab">
+                        <img
+                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB8UlEQVR4nGNgGAV0BxkxYj09ZpGfV0i5fFwuZfV/lQwn7S1NS+NiyIx5zZQZ/X/fLM3/n5ZL//+4XOrp5yUyunSzeP8sDbDFYMuXSe1joDnITRTt7TaJAAX1p2VSCyG+lv77cZn0bmrhD8slc/C64cNSGTOYr6mJvyyRMiAYAJ+WS92lssW7iAr5T8ule6hp8YelMu5EWfxxmbQ5tSz9uEzq8v//DIxEWQxS+Gm59AMqWRxPlKVwXy+VXkGxpculnv5fpcVGmsXLpOdQwcflJFkKAp9XSjdQaOmXD6tkhEi2+ONySi2W6ifZUkot/rhM6sf75eIKDJRa/HGZVAfReLlU26cVMnYM5IJPy6TqYRb/r2dgItsgUsGn5dJp8JJnuUwU3Sz/tFRS5OMy6VfkxjPZcQwC4BYJmZZTZDHM53fmKuS15ltun1ZhsuEDnoS1sNZwdXOuxZ5r05UmfVgqJ8hAKTBz999l7RP639Iz6L+Zu28lNjWmbv5RFh4B/238wv6buftfZ2AgsmLAB8zc/D8FpBf/d4tK+W/m5r8Rqxp3v0mOIXH/Q/Kq/pu7+/+3cAslvdRCB2bufj0gw8zd/X6ZufkHYFXj4Wth5u73GazOzX8VA7WAmYefloW3tzQ+NTYeoaJmboH6VAnmUcBABQAAudg8b3GNiNIAAAAASUVORK5CYII=">
+                        <span class="text">Mi carrito
+                            {% if carrito|length !=0 %}
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ carrito|length }}
+                            </span>
+                            {% endif %}
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#pedidos" class="nav-link text-white" data-toggle="tab">
+                        <img
+                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAABwklEQVR4nO2Wv0vDQBzFo3+ACGIDuQiCP0CpqyA4KBQVukkqDm7+Ezo5+GNUHJzcRC9R0UHRQa2IBlwcHFxdFVza5EhHn1xM5ajG/OgFFx88uH659z65NA1VlH/9tQC0AigIfo5pMdOaBlxC8zLSgB8kgB8BtCSBFoXwZopbzTN1FZOA7SBUBdCe4m61AagEHfdxQ+PC1S4nhQo9K0LPWJzAZbDZA9DZBLgDAAu6LqI2DwtXuZ4WKvRtCH0j3zYwmlMdSi692/madz0L72bunZ2O2HzWjNnJsM27/M7b+Zo/ozn1C1wx1W7X1OGVDbDDPnhX03BNIsW8y+8sG+AMzmoAf25kR4Ngx0PSwLyLd9Y/h4KzdkUE1+WYZD8roEOJFfoUupQsNgbsrX6Mzk345uskswYvhIKrVJ9qDJytD0ApGL75OslMdHVPnwwFsx01lxWYiT+jn+RQ7VU22DG1l1+hn9+zdi7/xNpZJNgxtTXpJ6baaiSYUW1GNphZpBR94j3SJ4bedrvwtN3jm6+TzL6e6AO9NxIMKC2uSRxpLw9KXCwp8f70OZTY0t5YJrmLBeVilp5nllaQYz0fG/wvJQN9AOBvNknfC+avAAAAAElFTkSuQmCC">
+                        <span class="text">Mis pedidos
+                            {% if pedidos|length !=0 %}
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ pedidos|length }}
+                            </span>
+                            {% endif %}
+                        </span>
+                    </a>
+                </li>
+                {% endif %}
+                {% if current_user.rol == 'ADMIN' %}
+                <hr>
+                <li>
+                    <a href="#gestionar_productos_servicios" class="nav-link active text-white" aria-selected="true"
+                        data-toggle="tab">
+                        <i class="fas fa-receipt icon"></i> <span class="text">Gestionar productos y servicios</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#gestionar_pedidos" class="nav-link text-white" data-toggle="tab">
+                        <i class="fas fa-receipt icon"></i> <span class="text">Gestionar pedidos
+                            {% if pedidos|length !=0 %}
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ pedidos|length }}
+                            </span>
+                            {% endif %}
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    {% endif %}
+                    {% if current_user.rol=='ADMIN' or current_user.rol=='DOCENTE'  %}
+                    <a href="#cerrar_pedidos" class="nav-link text-white" data-toggle="tab">
+                        <i class="fas fa-receipt icon"></i> <span class="text">Cerrar pedidos</span>
+                    </a>
+                    {% endif %}
+
+                </li>
+            </ul>
+            <hr>
+            <!-- Menú desplegable de opciones para el usuario -->
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                    data-toggle="dropdown" aria-expanded="false">
+                    <img src="/{{ current_user.foto_perfil }}" alt="" width="32" height="32"
+                        class="rounded-circle me-2">
+                    <strong class="ml-2">{{ current_user.nombre }}</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                    <!-- Opción para actualizar foto de perfil -->
+                    <li>
+                        <a href="#" class="dropdown-item" onclick="document.getElementById('nueva_foto').click();">
+                            <i class="fas fa-upload"></i> Actualizar foto de perfil
+                        </a>
+                        <!-- Formulario invisible -->
+                        <form id="form_actualizar_foto" action="{{ url_for('actualizar_foto_perfil') }}" method="POST"
+                            enctype="multipart/form-data" style="display: none;">
+                            <input type="hidden" name="user_type" value="{{ current_user.rol | lower }}">
+                            <input type="hidden" name="user_id" value="{{ current_user.id }}">
+                            <input type="file" name="nueva_foto" id="nueva_foto" onchange="enviarFormulario()">
+                        </form>
+                    </li>
+                    <li><a class="dropdown-item" href="{{ url_for('reset_password_request') }}"><i
+                                class="fas fa-key"></i>Cambiar contraseña</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="{{ url_for('logout') }}"><i
+                                class="fas fa-sign-out-alt"></i>Cerrar sesión</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tab"]').on('click', function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+
+            function toggleSidebar() {
+                $('#sidebar').toggleClass('small');
+            }
+
+            $(window).resize(function () {
+                if ($(window).width() <= 768) {
+                    $('#sidebar').addClass('small');
+                } else {
+                    $('#sidebar').removeClass('small');
+                }
+            });
+
+            // Initial check
+            if ($(window).width() <= 768) {
+                $('#sidebar').addClass('small');
+            }
+        });
+    </script>
+    <script>
+        document.getElementById('toggleSidebar').addEventListener('click', function () {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('small');
+        });
+    </script>

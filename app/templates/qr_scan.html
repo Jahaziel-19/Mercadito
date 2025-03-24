@@ -90,7 +90,7 @@
             </div>
         `;
 
-        fetch(`/obtener_pedido/${pedidoId}`)
+        fetch(`/pedidos/obtener_pedido/${pedidoId}`)
             .then(response => response.json())
             .then(data => {
                 const cardTitle = productInfo.querySelector('.card-title');
@@ -141,7 +141,7 @@
 
 
     function cerrarPedido(pedidoId) {
-        fetch('/cerrar_pedido', {
+        fetch('/pedidos/cerrar_pedido', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

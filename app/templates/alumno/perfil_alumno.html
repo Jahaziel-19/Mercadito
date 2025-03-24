@@ -2,6 +2,7 @@
 {% block title %}Mi perfil{% endblock %}
 {% block head %}{% endblock %}
 {% block content %}
+{% include 'include/sidebar.html' %}
 <div class="tab-content flex-grow-1 p-3" id="page-content-wrapper">
     <div class="tab-pane fade show active" id="carrito">
         <h1 class="mt-4">Mi Carrito</h1>
@@ -24,15 +25,15 @@
                         <td>{{ item.cantidad }}</td>
                         <td>${{ item.total }}</td>
                         <td>
-                            <a href="{{ url_for('editar_carrito', id=item.id) }}" class="btn btn-warning btn-sm">Editar</a>
-                            <a href="{{ url_for('eliminar_carrito', id=item.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar {{ producto.nombre_producto }}?');">Eliminar</a>
+                            <a href="{{ url_for('carrito.editar_carrito', id=item.id) }}" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="{{ url_for('carrito.eliminar_carrito', id=item.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar {{ producto.nombre_producto }}?');">Eliminar</a>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div> <!-- Fin de la tabla responsiva -->
-        <form method="POST" action="{{ url_for('pedir_carrito') }}">
+        <form method="POST" action="{{ url_for('carrito.pedir_carrito') }}">
             <button type="submit" class="btn btn-primary">Pedir carrito</button>
         </form>
     </div>
