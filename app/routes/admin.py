@@ -38,7 +38,7 @@ def registro():
 
         return redirect(url_for('admin.login'))
 
-    return render_template('admin/registro.html')
+    return render_template('admin/registro_admin.html')
 
 @admin_bp.route('/login', methods=['POST', 'GET'])
 def login():
@@ -53,7 +53,7 @@ def login():
         else:
             flash('Usuario o contraseña incorrectos', category="danger")
             return render_template('admin/login.html')
-    return render_template('admin/login.html')
+    return render_template('admin/login_admin.html')
 
 @admin_bp.route('/perfil', methods=['POST', 'GET'])
 @login_required
