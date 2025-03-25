@@ -92,22 +92,29 @@ def perfil():
         'cerrado': 'bg-primary'
     }
 
-    # Obtener pedidos del docente
-    pedidos = db.session.query(Pedido).filter(Pedido.id_usuario == current_user.id).all()
-    # Obtener pedidos cerrados por el docente
-    pedidos_cerrados = db.session.query(Pedido).filter(
-        # Pedido.id_usuario_cierre == f'{current_user.nombre} {current_user.apellido_paterno} {current_user.apellido_materno}',
-        Pedido.estatus == 'cerrado'
-    ).all()
-    # Obtener productos asociados a los pedidos cerrados
+    pedidos_cerrados = db.session.query(Pedido).options(
+        joinedload(Pedido.productos)
+    ).filter(Pedido.estatus == 'cerrado').all()
+
     productos_pedidos_cerrados = []
     for pedido in pedidos_cerrados:
-        productos = PedidoProducto.query.filter_by(id_pedido=pedido.id).all()
-        productos_pedidos_cerrados.append((pedido, productos))
+        productos_asociados = PedidoProducto.query.filter_by(
+            id_pedido=pedido.id,
+            carrera=current_user.carrera
+        ).all()
 
-    # Obtener carrito del docente
-    carrito = db.session.query(Carrito, Producto).join(Producto, Carrito.id_producto == Producto.id).filter(
-        Carrito.id_usuario == current_user.id).all()
+        if productos_asociados:
+            usuario = (
+                Admin.query.get(pedido.id_usuario) or
+                Docente.query.get(pedido.id_usuario) or
+                Alumno.query.get(pedido.id_usuario) or
+                Invitado.query.get(pedido.id_usuario)
+            )
+            pedido.nombre_usuario = f"{usuario.nombre} {usuario.apellido_paterno} {usuario.apellido_materno}" if usuario else "Desconocido"
+            productos_pedidos_cerrados.append((pedido, productos_asociados))
 
-    return render_template('docente_templates/perfil_docente.html', carrito=carrito, pedidos=pedidos,
-                           pedidos_cerrados=pedidos_cerrados, estatus=estatus)
+    return render_template(
+        'perfil_docente.html',
+        productos_pedidos_cerrados=productos_pedidos_cerrados,
+        estatus=estatus
+    )

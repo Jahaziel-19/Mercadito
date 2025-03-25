@@ -20,13 +20,17 @@
                 <tbody>
                     {% for item, producto in carrito %}
                     <tr>
-                        <td><img src="/{{ producto.imagen_producto }}" alt="{{ producto.nombre_producto }}" style="width: 50px; height: auto;"></td>
+                        <td><img src="/{{ producto.imagen_producto }}" alt="{{ producto.nombre_producto }}"
+                                style="width: 50px; height: auto;"></td>
                         <td>{{ producto.nombre_producto }}</td>
                         <td>{{ item.cantidad }}</td>
                         <td>${{ item.total }}</td>
                         <td>
-                            <a href="{{ url_for('carrito.editar_carrito', id=item.id) }}" class="btn btn-warning btn-sm">Editar</a>
-                            <a href="{{ url_for('carrito.eliminar_carrito', id=item.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar {{ producto.nombre_producto }}?');">Eliminar</a>
+                            <a href="{{ url_for('carrito.editar_carrito', id=item.id) }}"
+                                class="btn btn-warning btn-sm">Editar</a>
+                            <a href="{{ url_for('carrito.eliminar_carrito', id=item.id) }}"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('¿Estás seguro de eliminar {{ producto.nombre_producto }}?');">Eliminar</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -56,19 +60,23 @@
                     <tr>
                         <td>
                             {% if productos %}
-                                <img src="/{{ productos[0].producto.imagen_producto }}" alt="{{ productos[0].producto.nombre_producto }}" style="width: 50px; height: auto;">
+                            <img src="/{{ productos[0].producto.imagen_producto }}"
+                                alt="{{ productos[0].producto.nombre_producto }}" style="width: 50px; height: auto;">
                             {% endif %}
                         </td>
                         <td>
                             <ul class="list-unstyled mb-0"> <!-- Eliminar margen inferior -->
                                 {% for producto in productos %}
-                                    <li><strong>Nombre: </strong>{{ producto.producto.nombre_producto }}<br><strong>Cantidad: </strong>{{ producto.cantidad }}<br><strong>Total:</strong> ${{ producto.subtotal }}</li>
+                                <li><strong>Nombre: </strong>{{ producto.producto.nombre_producto
+                                    }}<br><strong>Cantidad: </strong>{{ producto.cantidad }}<br><strong>Total:</strong>
+                                    ${{ producto.subtotal }}</li>
                                 {% endfor %}
                             </ul>
                         </td>
                         <td>${{ pedido.total }}</td>
                         <td>{{ pedido.estatus }}</td>
-                        <td><button class="btn btn-info btn-sm" onclick="showQRCodeModal('{{ pedido.id }}')">Mostrar ID de Pedido</button></td> <!-- Botón más pequeño -->
+                        <td><button class="btn btn-info btn-sm" onclick="showQRCodeModal('{{ pedido.id }}')">Mostrar ID
+                                de Pedido</button></td> <!-- Botón más pequeño -->
                     </tr>
                     {% endfor %}
                 </tbody>
