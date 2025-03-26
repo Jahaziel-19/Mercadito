@@ -168,8 +168,6 @@ class PedidoProducto(db.Model):
             'fecha_limite':self.fecha_limite
         }
 
-
-
 class Carrera(db.Model):
     id = db.Column(db.String, primary_key=True, unique=True)
     nombre = db.Column(db.String, nullable=False)
