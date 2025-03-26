@@ -1,0 +1,3 @@
+id,nombre,carrera,foto_perfil,password_hash,email,rol,encoding
+ADMIN1,ADMIN1,TECNOLOGÍAS DE LA INFORMACIÓN ÁREA DESARROLLO DE SOFTWARE MULTIPLATAFORMA,static/default_profile_pic.png,scrypt:32768:8:1$fEQowz3fJcwmO9sX$62c9a4ea726d1bed9229e73c93cc378f2f97c9d99ccc710f5040b30234cba7abec20acfd752a00204de426de771b41bc4945d8ad9b710174d7d0448134326d9a,jesus.sanchezva@alumno.buap.mx,ADMIN,
+ADM2,ADMIN2,AGRICULTURA SUSTENTABLE Y PROTEGIDA,static/default_profile_pic.png,pbkdf2:sha256:600000$FnL0C3iiov4j9cGh$cde9750658bfe50b1d4c690e6d267f89619ebe419381ddffd9d35104cad81e98,jesuslopz535@gmail.com,ADMIN,
