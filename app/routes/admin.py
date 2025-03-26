@@ -52,8 +52,8 @@ def login():
             return redirect(url_for('index')) # Aquí puedes redirigir al panel de administración
         else:
             flash('Usuario o contraseña incorrectos', category="danger")
-            return render_template('admin/login.html')
-    return render_template('admin/login.html')
+            return render_template('login_admin.html')
+    return render_template('login_admin.html')
 
 @admin_bp.route('/perfil', methods=['POST', 'GET'])
 @login_required
