@@ -71,6 +71,7 @@
     <!-- Cerrar pedidos -->
     <div class="tab-pane fade show active" id="cerrar_pedidos">
         <h1 class="mt-4">Cerrar pedidos</h1>
+        <a href="{{ url_for('escaner') }}" class="btn btn-primary">Cerrar pedido</a>
         <button class="btn btn-primary mb-3" onclick="showCloseModal()">Cerrar Pedido</button>
         <table class="table">
             <thead>
@@ -116,30 +117,6 @@
         </table>
     </div>
 
-    <!-- Modal para cerrar pedido -->
-    <div class="modal fade" id="closeModal" tabindex="-1" aria-labelledby="closeModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="closeModalLabel">Cerrar Pedido</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="closeForm" method="POST" action="{{ url_for('cerrar_pedido') }}">
-                        <div class="form-group">
-                            <label for="pedido_id">ID del Pedido</label>
-                            <input type="text" class="form-control" id="pedido_id" name="pedido_id" required>
-                            <input type="hidden" name="{{ current_user.id }}">
-                        </div>
-                        <input type="hidden" name="carrera" value="{{ current_user.carrera }}">
-                        <button type="submit" class="btn btn-primary">Cerrar Pedido</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>    
 </div>
 
